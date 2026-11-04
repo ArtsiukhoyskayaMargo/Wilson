@@ -1,0 +1,21 @@
+{
+  "name": "cypress-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open --e2e --browser chrome",
+    "test": "cypress run --browser chrome",
+    "test:e2e": "cypress run --browser chrome --spec \"cypress/e2e/tests/**/*.spec.cy.ts\"",
+    "test:api": "cypress run --spec \"cypress/api/**/*.spec.cy.ts\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "cypress": "^16.2.0",
+    "typescript": "^7.0.2"
+  }
+}
