@@ -6,9 +6,12 @@
 
 | Спека | Что проверяет |
 |---|---|
-| `top-right-menu.spec.cy.ts` | правое меню хедера: открывается попап аккаунта, окно поиска, корзина |
-| `need-help.spec.cy.ts` | блок Need Help в футере: открывается чат Chat Online, Contact Us ведёт на help-center |
-| `home.spec.cy.ts` | главная страница открывается, виден hero-баннер |
+| `main-menu.spec.cy.ts` | меню аккаунта (5 элементов через soft assert), контент окна поиска, поиск с проверкой каждого результата, контент пустой корзины |
+| `footer.spec.cy.ts` | Contact Us и переходы по ссылкам футера (параметризованные тесты) |
+| `chat-online.spec.cy.ts` | чат открывается из футера и из чёрной полосы сверху |
+| `announcement-bar.spec.cy.ts` | контент чёрной полосы сверху, Find a Store, предложение скидки (известный баг, `it.skip`) |
+
+Подробные тест-кейсы — в [TEST_CASES.md](TEST_CASES.md).
 
 ## Структура
 
@@ -16,18 +19,21 @@
 cypress/
   e2e/
     pageObjects/
-      BasePage.ts    — общие для всех страниц части: хедер, правое меню, футер
-      HomePage.ts    — главная страница, наследует BasePage
-    tests/           — спеки
+      BasePage.ts           — общие для всех страниц части: хедер, announcement bar, футер, чат
+      HomePage.ts           — главная страница
+      HelpCenterPage.ts     — страница Help Center & Contact Us
+    tests/                  — спеки по компонентам
   support/
-    commands.ts      — кастомная команда cy.acceptCookies()
-    e2e.ts           — глобальные настройки
-cypress.config.ts    — конфиг Cypress
+    commands.ts             — cy.acceptCookies(), soft assert: cy.softVisible(), cy.softAssertAll()
+    e2e.ts                  — глобальные настройки
+cypress.config.ts           — конфиг Cypress
 ```
 
 - Локаторы хранятся только в page objects, в спеках сырых селекторов нет.
 - Всё, что есть на каждой странице (хедер, футер), лежит в `BasePage`. Страницы наследуют его через `extends`.
+- Page objects экспортируются готовыми объектами: `import { homePage } from '../pageObjects/HomePage'`.
 - `cy.acceptCookies()` принимает куки один раз через `cy.session()` и кэширует сессию для всех спек.
+- Soft assert — плагин `soft-assert`. `cy.softVisible()` ждёт элемент (в том числе в shadow DOM), но при неудаче не роняет тест; `cy.softAssertAll()` в конце теста выводит все ошибки разом.
 
 ## Установка и запуск
 
@@ -38,8 +44,8 @@ npm install
 | Команда | Что делает |
 |---|---|
 | `npm run cy:open` | открывает окно Cypress, тесты запускаются в Chrome |
-| `npm test` | все тесты без окна (headless) |
-| `npm run test:e2e` | только e2e-тесты |
+| `npm test` | все тесты в Chrome с окном браузера (`--headed`: в headless-режиме сайт блокирует запросы) |
+| `npm run test:e2e` | только e2e-тесты, тоже `--headed` |
 
 Запустить одну спеку:
 ```
